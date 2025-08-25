@@ -183,9 +183,7 @@ ContinueText:
 	next ""
 	; fallthrough
 
-NewGameText:
-	db   "NEW GAME"
-	next "OPTION@"
+; NewGameText is now defined in c_code/menu_strings.asm
 
 DisplayContinueGameInfo:
 	xor a

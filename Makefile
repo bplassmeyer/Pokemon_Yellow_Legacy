@@ -14,7 +14,8 @@ rom_obj := \
 	gfx/pics.o \
 	gfx/pikachu.o \
 	gfx/sprites.o \
-	gfx/tilesets.o
+	gfx/tilesets.o \
+	c_code/menu_strings.o
 
 pokeyellow_obj       := $(rom_obj)
 pokeyellow_debug_obj := $(rom_obj:.o=_debug.o)
@@ -34,6 +35,10 @@ RGBASM  ?= $(RGBDS)rgbasm
 RGBFIX  ?= $(RGBDS)rgbfix
 RGBGFX  ?= $(RGBDS)rgbgfx
 RGBLINK ?= $(RGBDS)rgblink
+
+
+
+
 
 
 ### Build targets
