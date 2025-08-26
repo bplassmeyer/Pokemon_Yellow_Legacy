@@ -4,7 +4,12 @@ roms := \
 patches := \
 	pokeyellow.patch
 
-rom_obj := \
+# GBDK compiler for C code
+GBDK_HOME = /opt/gbdk
+LCC = $(GBDK_HOME)/bin/lcc
+LCCFLAGS = -S -o
+
+rom_obj = \
 	audio.o \
 	home.o \
 	main.o \
@@ -15,7 +20,7 @@ rom_obj := \
 	gfx/pikachu.o \
 	gfx/sprites.o \
 	gfx/tilesets.o \
-	c_code/menu_strings.o
+	c_code/menu_strings_rgbds.o
 
 pokeyellow_obj       := $(rom_obj)
 pokeyellow_debug_obj := $(rom_obj:.o=_debug.o)
@@ -188,3 +193,8 @@ gfx/surfing_pikachu/surfing_pikachu_3.2bpp: tools/gfx += --trim-whitespace
 
 %.pcm: %.wav
 	tools/pcm $< $@
+
+# Compile C code with GBDK to SDCC assembly, then convert to RGBDS
+c_code/menu_strings_rgbds.asm: c_code/menu_strings.c
+	$(LCC) $(LCCFLAGS) c_code/menu_strings.s $<
+	python3 c_code/convert_sdcc_to_rgbds.py c_code/menu_strings.s $@
