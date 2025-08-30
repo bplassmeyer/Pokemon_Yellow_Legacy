@@ -8,9 +8,12 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
-	.globl _new_game_text_length
-	.globl _new_game_text
-	.globl _new_game_text_data
+	.globl _new_game_line2_length
+	.globl _new_game_line1_length
+	.globl _new_game_line2_str
+	.globl _new_game_line1_str
+	.globl _new_game_line2
+	.globl _new_game_line1
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -43,18 +46,30 @@
 ;--------------------------------------------------------
 	.area _CODE
 	.area _CODE
-_new_game_text_data:
-	.db #0x50	; 80	'P'
-	.db #0x65	; 101	'e'
-	.db #0x6e	; 110	'n'
-	.db #0x69	; 105	'i'
-	.db #0x73	; 115	's'
+_new_game_line1:
+	.db #0x42	; 66	'B'
+	.db #0x45	; 69	'E'
+	.db #0x4e	; 78	'N'
+	.db #0x49	; 73	'I'
+	.db #0x53	; 83	'S'
 	.db #0x20	; 32
 	.db #0x47	; 71	'G'
-_new_game_text:
-	.ascii "Penis G"
+_new_game_line2:
+	.db #0x42	; 66	'B'
+	.db #0x50	; 80	'P'
+	.db #0x54	; 84	'T'
+	.db #0x49	; 73	'I'
+	.db #0x4f	; 79	'O'
+	.db #0x4e	; 78	'N'
+_new_game_line1_str:
+	.ascii "PENIS G"
 	.db 0x00
-_new_game_text_length:
+_new_game_line2_str:
+	.ascii "OPTION"
+	.db 0x00
+_new_game_line1_length:
 	.dw #0x0007
+_new_game_line2_length:
+	.dw #0x0006
 	.area _INITIALIZER
 	.area _CABS (ABS)

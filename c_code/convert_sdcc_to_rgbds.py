@@ -104,13 +104,85 @@ def convert_sdcc_to_rgbds(sdcc_file, output_file):
     rgbds_lines.append("; NewGameText should point to the actual C data")
     rgbds_lines.append("NewGameText::")
     
-    # Generate the proper assembly format that matches the game's expectations:
-    # db "Penis G"
-    # next "OPTION@"
-    rgbds_lines.append('\t; First line: "Penis G"')
-    rgbds_lines.append('\tdb "Penis G"')
-    rgbds_lines.append('\t; Second line: "OPTION@" (using next macro)')
-    rgbds_lines.append('\tnext "OPTION@"')
+    # Parse the actual C-compiled data from SDCC output
+    line1_data = []
+    line2_data = []
+    in_line1_section = False
+    in_line2_section = False
+    
+    for line in lines:
+        line = line.strip()
+        if line.startswith('_new_game_line1:'):
+            in_line1_section = True
+            in_line2_section = False
+            continue
+        elif line.startswith('_new_game_line2:'):
+            in_line1_section = False
+            in_line2_section = True
+            continue
+        elif in_line1_section and line.startswith('_'):
+            # We've hit the next label, stop copying line1
+            in_line1_section = False
+        elif in_line2_section and line.startswith('_'):
+            # We've hit the next label, stop copying line2
+            in_line1_section = False
+        elif in_line1_section and line:
+            # Copy the line1 data lines
+            if line.startswith('.db #0x'):
+                match = re.match(r'\.db #0x([0-9a-fA-F]+)', line)
+                if match:
+                    hex_val = match.group(1)
+                    line1_data.append(f'\tdb ${hex_val}')
+        elif in_line2_section and line:
+            # Copy the line2 data lines
+            if line.startswith('.db #0x'):
+                match = re.match(r'\.db #0x([0-9a-fA-F]+)', line)
+                if match:
+                    hex_val = match.group(1)
+                    line2_data.append(f'\tdb ${hex_val}')
+    
+    # Output the first line data using actual C-compiled values
+    if line1_data:
+        rgbds_lines.append('\t; First line from C compilation:')
+        # Convert hex values back to string for the first line
+        first_line_chars = []
+        for data_line in line1_data:
+            # Extract hex value from "db $XX"
+            match = re.match(r'\tdb \$([0-9a-fA-F]+)', data_line)
+            if match:
+                hex_val = int(match.group(1), 16)
+                first_line_chars.append(chr(hex_val))
+        
+        if first_line_chars:
+            first_line_str = ''.join(first_line_chars)
+            rgbds_lines.append(f'\tdb "{first_line_str}"')
+        else:
+            rgbds_lines.append('\tdb "NEW GAME"')
+    else:
+        # Fallback if no data found
+        rgbds_lines.append('\t; Fallback data (C compilation may have failed):')
+        rgbds_lines.append('\tdb "NEW GAME"')
+    
+    # Output the second line using the 'next' macro
+    if line2_data:
+        rgbds_lines.append('\t; Second line from C compilation:')
+        # Convert hex values back to string for the next macro
+        second_line_chars = []
+        for data_line in line2_data:
+            # Extract hex value from "db $XX"
+            match = re.match(r'\tdb \$([0-9a-fA-F]+)', data_line)
+            if match:
+                hex_val = int(match.group(1), 16)
+                second_line_chars.append(chr(hex_val))
+        
+        if second_line_chars:
+            second_line_str = ''.join(second_line_chars)
+            rgbds_lines.append(f'\tnext "{second_line_str}@"')
+        else:
+            rgbds_lines.append('\tnext "OPTION@"')
+    else:
+        rgbds_lines.append('\t; Second line (using next macro):')
+        rgbds_lines.append('\tnext "OPTION@"')
     
     # Write the converted file
     with open(output_file, 'w') as f:

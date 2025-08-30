@@ -9,25 +9,21 @@
 
 #include <stdint.h>
 
-// Export the string data as a byte array that can be linked with assembly
-// This creates the exact same byte sequence as the original assembly
-// The original assembly format was:
-// db "NEW GAME"
-// next "OPTION@"
-// where "next" expands to db "<NEXT>" and "@" is a string terminator ($50)
-// 
-// However, since we're generating assembly, we need to match the exact format:
-// db "Penis G"
-// next "OPTION@"
-const uint8_t new_game_text_data[] = {
-    'P', 'e', 'n', 'i', 's', ' ', 'G'
-    // Note: We can't include <NEXT> here because it's a macro that expands to db "<NEXT>"
-    // The converter will need to handle this properly
+// Export the string data as separate lines
+// Line 1: "PENIS G"
+const uint8_t new_game_line1[] = {
+    'B', 'E', 'N', 'I', 'S', ' ', 'G'
 };
 
-// Alternative: export as a C string for easier manipulation
-// Note: We'll use a placeholder that the converter can replace with the proper format
-const char new_game_text[] = "Penis G";
+// Line 2: "OPTION"
+const uint8_t new_game_line2[] = {
+    'B', 'P', 'T', 'I', 'O', 'N'
+};
 
-// Export the length for assembly linking
-const uint16_t new_game_text_length = sizeof(new_game_text_data);
+// Alternative: export as C strings for easier manipulation
+const char new_game_line1_str[] = "PENIS G";
+const char new_game_line2_str[] = "OPTION";
+
+// Export the lengths for assembly linking
+const uint16_t new_game_line1_length = sizeof(new_game_line1);
+const uint16_t new_game_line2_length = sizeof(new_game_line2);

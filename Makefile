@@ -195,6 +195,8 @@ gfx/surfing_pikachu/surfing_pikachu_3.2bpp: tools/gfx += --trim-whitespace
 	tools/pcm $< $@
 
 # Compile C code with GBDK to SDCC assembly, then convert to RGBDS
-c_code/menu_strings_rgbds.asm: c_code/menu_strings.c
-	$(LCC) $(LCCFLAGS) c_code/menu_strings.s $<
-	python3 c_code/convert_sdcc_to_rgbds.py c_code/menu_strings.s $@
+c_code/menu_strings.s: c_code/menu_strings.c
+	$(LCC) $(LCCFLAGS) $@ $<
+
+c_code/menu_strings_rgbds.asm: c_code/menu_strings.s
+	python3 c_code/convert_sdcc_to_rgbds.py $< $@
