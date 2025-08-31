@@ -218,6 +218,11 @@ bypass_to_pikachu_following::
     ld [wOaksLabCurScript], a
     ld [wCurMapScript], a
     
+    ; Set up Viridian Mart script state to skip the automatic parcel sequence
+    ; This prevents the clerk from automatically starting the parcel quest dialogue
+    ld a, 2  ; SCRIPT_VIRIDIANMART_SCRIPT2 (final script state, normal shop operation)
+    ld [wViridianMartCurScript], a
+    
     ; Explicitly clear wJoyIgnore to ensure player input is enabled
     ; This prevents any remaining battle sequences from blocking input
     xor a
@@ -227,6 +232,7 @@ bypass_to_pikachu_following::
     ; This ensures the game thinks we've completed the full Oak's Lab story
     SetEvent EVENT_GOT_POKEDEX
     SetEvent EVENT_OAK_GOT_PARCEL
+    SetEvent EVENT_GOT_OAKS_PARCEL  ; This prevents the Viridian Mart clerk from giving you the parcel
     SetEvent EVENT_1ST_ROUTE22_RIVAL_BATTLE
     SetEvent EVENT_ROUTE22_RIVAL_WANTS_BATTLE
     
