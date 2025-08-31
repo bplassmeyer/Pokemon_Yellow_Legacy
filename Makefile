@@ -214,3 +214,6 @@ data/pokemon/base_stats/pidgey.asm: c_code/pokemon_stats.s
 
 data/pokemon/base_stats/rattata.asm: c_code/pokemon_stats.s
 	python3 c_code/convert_pokemon_stats.py $< data/pokemon/base_stats
+
+data/pokemon/base_stats/eevee.asm: c_code/pokemon_stats.s
+	python3 c_code/convert_pokemon_stats.py $< data/pokemon/base_stats

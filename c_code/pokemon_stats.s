@@ -11,6 +11,17 @@
 	.globl _rattata_stats_size
 	.globl _pidgey_stats_size
 	.globl _pikachu_stats_size
+	.globl _eevee_growth_rate
+	.globl _eevee_base_exp
+	.globl _eevee_catch_rate
+	.globl _eevee_type2
+	.globl _eevee_type1
+	.globl _eevee_spc
+	.globl _eevee_spd
+	.globl _eevee_def
+	.globl _eevee_atk
+	.globl _eevee_hp
+	.globl _eevee_dex_id
 	.globl _rattata_growth_rate
 	.globl _rattata_base_exp
 	.globl _rattata_catch_rate
@@ -44,6 +55,7 @@
 	.globl _pikachu_atk
 	.globl _pikachu_hp
 	.globl _pikachu_dex_id
+	.globl _eevee_stats
 	.globl _rattata_stats
 	.globl _pidgey_stats
 	.globl _pikachu_stats
@@ -115,6 +127,18 @@ _rattata_stats:
 	.db #0xff	; 255
 	.db #0x39	; 57	'9'
 	.db #0x00	; 0
+_eevee_stats:
+	.db #0x85	; 133
+	.db #0x37	; 55	'7'
+	.db #0x37	; 55	'7'
+	.db #0x32	; 50	'2'
+	.db #0x37	; 55	'7'
+	.db #0x41	; 65	'A'
+	.db #0x02	; 2
+	.db #0x02	; 2
+	.db #0x2d	; 45
+	.db #0x5c	; 92
+	.db #0x00	; 0
 _pikachu_dex_id:
 	.byte (_pikachu_stats + 0)
 _pikachu_hp:
@@ -181,6 +205,28 @@ _rattata_base_exp:
 	.byte (_rattata_stats + 9)
 _rattata_growth_rate:
 	.byte (_rattata_stats + 10)
+_eevee_dex_id:
+	.byte (_eevee_stats + 0)
+_eevee_hp:
+	.byte (_eevee_stats + 1)
+_eevee_atk:
+	.byte (_eevee_stats + 2)
+_eevee_def:
+	.byte (_eevee_stats + 3)
+_eevee_spd:
+	.byte (_eevee_stats + 4)
+_eevee_spc:
+	.byte (_eevee_stats + 5)
+_eevee_type1:
+	.byte (_eevee_stats + 6)
+_eevee_type2:
+	.byte (_eevee_stats + 7)
+_eevee_catch_rate:
+	.byte (_eevee_stats + 8)
+_eevee_base_exp:
+	.byte (_eevee_stats + 9)
+_eevee_growth_rate:
+	.byte (_eevee_stats + 10)
 _pikachu_stats_size:
 	.dw #0x000b
 _pidgey_stats_size:

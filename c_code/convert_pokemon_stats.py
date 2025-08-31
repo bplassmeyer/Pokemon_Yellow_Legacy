@@ -28,7 +28,7 @@ def convert_pokemon_stats_to_rgbds(sdcc_file, output_dir):
     pokemon_data = {}
     
     # Define the Pokemon we're looking for
-    pokemon_names = ['pikachu', 'pidgey', 'rattata']
+    pokemon_names = ['pikachu', 'pidgey', 'rattata', 'eevee']
     
     for pokemon in pokemon_names:
         pokemon_data[pokemon] = []
@@ -94,6 +94,8 @@ def convert_pokemon_stats_to_rgbds(sdcc_file, output_dir):
                 file_content.append('\tdb GUST, NO_MOVE, NO_MOVE, NO_MOVE ; level 1 learnset')
             elif pokemon == 'rattata':
                 file_content.append('\tdb TACKLE, TAIL_WHIP, NO_MOVE, NO_MOVE ; level 1 learnset')
+            elif pokemon == 'eevee':
+                file_content.append('\tdb TACKLE, NO_MOVE, NO_MOVE, NO_MOVE ; level 1 learnset')
             
             # Growth rate
             growth_name = get_growth_name(data[10])
@@ -119,6 +121,11 @@ def convert_pokemon_stats_to_rgbds(sdcc_file, output_dir):
                 file_content.append('\t     WATER_GUN,    BLIZZARD,     RAGE,         THUNDERBOLT,  THUNDER,      \\')
                 file_content.append('\t     DIG,          MIMIC,        DOUBLE_TEAM,  BIDE,         SWIFT,        \\')
                 file_content.append('\t     SKULL_BASH,   REST,         SUBSTITUTE')
+            elif pokemon == 'eevee':
+                file_content.append('\t; tm/hm learnset')
+                file_content.append('\ttmhm TOXIC,        BODY_SLAM,    TAKE_DOWN,    DOUBLE_EDGE,  RAGE,         \\')
+                file_content.append('\t     DIG,          MIMIC,   DOUBLE_TEAM,  REFLECT,      BIDE,              \\')
+                file_content.append('\t     SWIFT,        SKULL_BASH,   REST,         SUBSTITUTE')
             
             file_content.append('\t; end')
             file_content.append("")

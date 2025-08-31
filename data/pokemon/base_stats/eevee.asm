@@ -1,9 +1,9 @@
 	db DEX_EEVEE ; pokedex id
 
-	db  70,  65,  65,  55,  70
+	db   55,   55,   50,   55,   65
 	;   hp  atk  def  spd  spc
 
-	db NORMAL, NORMAL ; type
+	db FLYING, FLYING ; type
 	db 45 ; catch rate
 	db 92 ; base exp
 

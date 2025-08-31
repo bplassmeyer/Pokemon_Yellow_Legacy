@@ -89,6 +89,21 @@ const PokemonStats rattata_stats = {
     .growth_rate = GROWTH_MEDIUM_FAST
 };
 
+// Eevee base stats (DEX_EEVEE = 133) - Normal type with balanced stats
+const PokemonStats eevee_stats = {
+    .dex_id = 133,       // EEVEE
+    .hp = 55,
+    .atk = 55,
+    .def = 50,
+    .spd = 55,
+    .spc = 65,
+    .type1 = TYPE_FLYING,
+    .type2 = TYPE_FLYING,
+    .catch_rate = 45,
+    .base_exp = 92,
+    .growth_rate = GROWTH_MEDIUM_FAST
+};
+
 // Export individual values for assembly linking - Pikachu
 const uint8_t pikachu_dex_id = pikachu_stats.dex_id;
 const uint8_t pikachu_hp = pikachu_stats.hp;
@@ -127,6 +142,19 @@ const uint8_t rattata_type2 = rattata_stats.type2;
 const uint8_t rattata_catch_rate = rattata_stats.catch_rate;
 const uint8_t rattata_base_exp = rattata_stats.base_exp;
 const uint8_t rattata_growth_rate = rattata_stats.growth_rate;
+
+// Export individual values for assembly linking - Eevee
+const uint8_t eevee_dex_id = eevee_stats.dex_id;
+const uint8_t eevee_hp = eevee_stats.hp;
+const uint8_t eevee_atk = eevee_stats.atk;
+const uint8_t eevee_def = eevee_stats.def;
+const uint8_t eevee_spd = eevee_stats.spd;
+const uint8_t eevee_spc = eevee_stats.spc;
+const uint8_t eevee_type1 = eevee_stats.type1;
+const uint8_t eevee_type2 = eevee_stats.type2;
+const uint8_t eevee_catch_rate = eevee_stats.catch_rate;
+const uint8_t eevee_base_exp = eevee_stats.base_exp;
+const uint8_t eevee_growth_rate = eevee_stats.growth_rate;
 
 // Export the lengths for assembly linking
 const uint16_t pikachu_stats_size = sizeof(pikachu_stats);
