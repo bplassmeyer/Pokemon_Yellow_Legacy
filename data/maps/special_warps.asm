@@ -45,7 +45,7 @@ MACRO special_warp_spec
 ENDM
 
 NewGameWarp:
-	special_warp_spec PALLET_TOWN, 5, 6, PALLET_TOWN
+	special_warp_spec OAKS_LAB, 4, 6, OAKS_LAB
 TradeCenterPlayerWarp:
 	special_warp_spec TRADE_CENTER,  3, 4, CLUB
 TradeCenterFriendWarp:

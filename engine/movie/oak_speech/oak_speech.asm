@@ -65,7 +65,7 @@ OakSpeech:
 	; If our bypass function was called, re-set the names after PrepareOakSpeech
 	ld a, [wOptionsInitialized]
 	cp 1
-	call z, bypass_init_menus
+	; call z, bypass_init_menus  ; Removed - not needed anymore
 	predef InitPlayerData2
 	ld hl, wNumBoxItems
 	ld a, POTION

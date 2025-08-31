@@ -156,8 +156,8 @@ StartNewGame:
 	res BIT_DEBUG_MODE, [hl]
 	; fallthrough
 StartNewGameDebug:
-	call bypass_graphics_cleanup
-	; No need to call OakSpeech or set up player data - bypass_graphics_cleanup handles everything
+	call bypass_to_pikachu_following
+	; No need to call OakSpeech or set up player data - bypass_to_pikachu_following handles everything
 	; and jumps directly to SpecialEnterMap
 
 ; enter map after using a special warp or loading the game from the main menu
