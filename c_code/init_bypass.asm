@@ -210,7 +210,6 @@ bypass_graphics_cleanup::
     ld [hli], a
     
     ; Set options initialized to 1 (skip options initialization)
-    ; This flag will make OakSpeech jump to .skipSpeech
     ld a, 1
     ld [wOptionsInitialized], a
     
@@ -234,9 +233,17 @@ bypass_graphics_cleanup::
     ld [wItemQuantity], a
     call AddItemToInventory
     
-    ; Set up the destination map
-    ld a, [wDefaultMap]
+    ; Set up the destination map (Pallet Town - outside player's house)
+    ld a, PALLET_TOWN
     ld [wDestinationMap], a
+    
+    ; Set player coordinates to be outside the house (not inside)
+    ; Coordinates (5,6) should be in front of the player's house
+    ld a, 6  ; Y coordinate
+    ld [wYCoord], a
+    ld a, 5  ; X coordinate
+    ld [wXCoord], a
+    
     call PrepareForSpecialWarp
     
     ; Set up player sprite data
@@ -306,7 +313,6 @@ bypass_graphics_cleanup_girl::
     ld [hli], a
     
     ; Set options initialized to 1 (skip options initialization)
-    ; This flag will make OakSpeech jump to .skipSpeech
     ld a, 1
     ld [wOptionsInitialized], a
     
@@ -330,9 +336,17 @@ bypass_graphics_cleanup_girl::
     ld [wItemQuantity], a
     call AddItemToInventory
     
-    ; Set up the destination map
-    ld a, [wDefaultMap]
+    ; Set up the destination map (Pallet Town - outside player's house)
+    ld a, PALLET_TOWN
     ld [wDestinationMap], a
+    
+    ; Set player coordinates to be outside the house (not inside)
+    ; Coordinates (5,6) should be in front of the player's house
+    ld a, 6  ; Y coordinate
+    ld [wYCoord], a
+    ld a, 5  ; X coordinate
+    ld [wXCoord], a
+    
     call PrepareForSpecialWarp
     
     ; Set up player sprite data
