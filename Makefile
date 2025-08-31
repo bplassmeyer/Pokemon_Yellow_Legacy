@@ -200,3 +200,17 @@ c_code/menu_strings.s: c_code/menu_strings.c
 
 c_code/menu_strings_rgbds.asm: c_code/menu_strings.s
 	python3 c_code/convert_sdcc_to_rgbds.py $< $@
+
+# Compile Pokemon stats C code and replace original base stats files
+c_code/pokemon_stats.s: c_code/pokemon_stats.c
+	$(LCC) $(LCCFLAGS) $@ $<
+
+# Replace original Pokemon base stats files with C-generated ones
+data/pokemon/base_stats/pikachu.asm: c_code/pokemon_stats.s
+	python3 c_code/convert_pokemon_stats.py $< data/pokemon/base_stats
+
+data/pokemon/base_stats/pidgey.asm: c_code/pokemon_stats.s
+	python3 c_code/convert_pokemon_stats.py $< data/pokemon/base_stats
+
+data/pokemon/base_stats/rattata.asm: c_code/pokemon_stats.s
+	python3 c_code/convert_pokemon_stats.py $< data/pokemon/base_stats

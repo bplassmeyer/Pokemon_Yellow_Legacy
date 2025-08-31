@@ -10,7 +10,7 @@
 	EXPORT _new_game_line1
 	SECTION "MenuStrings", ROMX
 _new_game_line1:
-	db $42
+	db $50
 	db $45
 	db $4e
 	db $49
@@ -18,7 +18,7 @@ _new_game_line1:
 	db $20
 	db $47
 _new_game_line2:
-	db $42
+	db $4f
 	db $50
 	db $54
 	db $49
@@ -39,6 +39,6 @@ _new_game_line2_length:
 ; NewGameText should point to the actual C data
 NewGameText::
 	; First line from C compilation:
-	db "BENIS G"
+	db "PENIS G"
 	; Second line from C compilation:
-	next "BPTION@"
+	next "OPTION@"

@@ -47,7 +47,7 @@
 	.area _CODE
 	.area _CODE
 _new_game_line1:
-	.db #0x42	; 66	'B'
+	.db #0x50	; 80	'P'
 	.db #0x45	; 69	'E'
 	.db #0x4e	; 78	'N'
 	.db #0x49	; 73	'I'
@@ -55,7 +55,7 @@ _new_game_line1:
 	.db #0x20	; 32
 	.db #0x47	; 71	'G'
 _new_game_line2:
-	.db #0x42	; 66	'B'
+	.db #0x4f	; 79	'O'
 	.db #0x50	; 80	'P'
 	.db #0x54	; 84	'T'
 	.db #0x49	; 73	'I'

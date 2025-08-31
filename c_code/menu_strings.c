@@ -12,12 +12,12 @@
 // Export the string data as separate lines
 // Line 1: "PENIS G"
 const uint8_t new_game_line1[] = {
-    'B', 'E', 'N', 'I', 'S', ' ', 'G'
+    'P', 'E', 'N', 'I', 'S', ' ', 'G'
 };
 
 // Line 2: "OPTION"
 const uint8_t new_game_line2[] = {
-    'B', 'P', 'T', 'I', 'O', 'N'
+    'O', 'P', 'T', 'I', 'O', 'N'
 };
 
 // Alternative: export as C strings for easier manipulation
