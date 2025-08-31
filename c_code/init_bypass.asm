@@ -67,11 +67,12 @@ bypass_init_menus::
     ld [wOptionsInitialized], a
     
     ; Set default options
-    ld a, 1  ; Fast text
-    ld [wLetterPrintingDelayFlags], a
+    ; Text speed will be set by set_slow_text_speed() call below
     
-    ld a, 0  ; Medium text delay
-    ld [wOptions], a
+    ; Set game options to development-friendly settings
+    call set_slow_text_speed      ; Set text speed to SLOW
+    call set_battle_style_shift  ; Set battle style to SHIFT
+    call enable_battle_animations ; Enable battle animations
     
     ld a, 64 ; Default printer settings
     ld [wPrinterSettings], a
@@ -139,11 +140,12 @@ bypass_init_menus_girl::
     ld [wOptionsInitialized], a
     
     ; Set default options
-    ld a, 1  ; Fast text
-    ld [wLetterPrintingDelayFlags], a
+    ; Text speed will be set by set_slow_text_speed() call below
     
-    ld a, 0  ; Medium text delay
-    ld [wOptions], a
+    ; Set game options to development-friendly settings
+    call set_slow_text_speed      ; Set text speed to SLOW
+    call set_battle_style_shift  ; Set battle style to SHIFT
+    call enable_battle_animations ; Enable battle animations
     
     ld a, 64 ; Default printer settings
     ld [wPrinterSettings], a

@@ -20,7 +20,8 @@ rom_obj = \
 	gfx/pikachu.o \
 	gfx/sprites.o \
 	gfx/tilesets.o \
-	c_code/menu_strings_rgbds.o
+	c_code/menu_strings_rgbds.o \
+	c_code/game_options_rgbds.o
 
 pokeyellow_obj       := $(rom_obj)
 pokeyellow_debug_obj := $(rom_obj:.o=_debug.o)
@@ -201,6 +202,11 @@ c_code/menu_strings.s: c_code/menu_strings.c
 c_code/menu_strings_rgbds.asm: c_code/menu_strings.s
 	python3 c_code/convert_sdcc_to_rgbds.py $< $@
 
+c_code/game_options_rgbds.asm: c_code/game_options.s
+	python3 c_code/convert_game_options.py $< $@
+
+
+
 # Compile Pokemon stats C code and replace original base stats files
 c_code/pokemon_stats.s: c_code/pokemon_stats.c
 	$(LCC) $(LCCFLAGS) $@ $<
@@ -217,3 +223,7 @@ data/pokemon/base_stats/rattata.asm: c_code/pokemon_stats.s
 
 data/pokemon/base_stats/eevee.asm: c_code/pokemon_stats.s
 	python3 c_code/convert_pokemon_stats.py $< data/pokemon/base_stats
+
+# Compile Game Options C code and convert to RGBDS assembly
+c_code/game_options.s: c_code/game_options.c
+	$(LCC) $(LCCFLAGS) $@ $<

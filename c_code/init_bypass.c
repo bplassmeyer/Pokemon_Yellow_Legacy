@@ -7,8 +7,8 @@
 #define GENDER_GIRL 1
 
 // Default names (max 11 characters including null terminator)
-#define DEFAULT_PLAYER_NAME "BRENNAN"
-#define DEFAULT_RIVAL_NAME "RIVAL"
+#define DEFAULT_PLAYER_NAME "TESTER"
+#define DEFAULT_RIVAL_NAME "DEBUG"
 
 // Function to bypass all initialization menus
 // This replaces the OakSpeech function call
@@ -25,7 +25,7 @@ void bypass_init_menus(void) {
     extern uint8_t wPlayerName[11];
     const char* player_name = DEFAULT_PLAYER_NAME;
     for (int i = 0; i < 11; i++) {
-        if (i < 8) { // Length of "BRENNAN"
+        if (i < 6) { // Length of "TESTER"
             wPlayerName[i] = player_name[i];
         } else {
             wPlayerName[i] = 0x50; // '@' terminator
@@ -70,9 +70,9 @@ void bypass_init_menus_girl(void) {
     
     // Set player name to default girl name
     extern uint8_t wPlayerName[11];
-    const char* player_name = "GREEN"; // Default girl name
+    const char* player_name = "TESTER"; // Use same name for consistency
     for (int i = 0; i < 11; i++) {
-        if (i < 5) { // Length of "GREEN"
+        if (i < 6) { // Length of "TESTER"
             wPlayerName[i] = player_name[i];
         } else {
             wPlayerName[i] = 0x50; // '@' terminator
