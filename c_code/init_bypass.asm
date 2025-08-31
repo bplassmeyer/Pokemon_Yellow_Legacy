@@ -203,6 +203,9 @@ bypass_to_pikachu_following::
     ld hl, wd72e
     set 3, [hl]
     
+    ; Test our money management system by setting starting money to $10,000 (final correct version)
+    call _give_ten_thousand_final
+    
     ; Set wOakWalkedToPlayer to 2 to indicate the intro sequence is complete
     ; This prevents Oak from showing the "Hey! Wait! Don't go out!" warning
     ld a, 2

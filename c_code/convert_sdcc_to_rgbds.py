@@ -34,7 +34,10 @@ def convert_sdcc_to_rgbds(sdcc_file, output_file):
         # Convert SDCC areas to RGBDS sections (avoid duplicates and conflicts)
         if line.startswith('.area _CODE'):
             if 'Code' not in sections_added:
-                rgbds_lines.append('\tSECTION "MenuStrings", ROMX')
+                # Use a unique section name based on the input filename
+                filename = os.path.basename(sdcc_file).replace('.s', '')
+                section_name = filename.replace('_', '').title()
+                rgbds_lines.append(f'\tSECTION "{section_name}", ROMX')
                 sections_added.add('Code')
             continue
         elif line.startswith('.area _DATA'):
@@ -83,6 +86,49 @@ def convert_sdcc_to_rgbds(sdcc_file, output_file):
                 rgbds_lines.append(f'\tdb ${hex_val}')
             continue
             
+        # Convert SDCC-specific syntax to RGBDS syntax
+        # Convert #_symbol to symbol (remove # and _)
+        if '#' in line:
+            line = re.sub(r'#_([a-zA-Z_][a-zA-Z0-9_]*)', r'\1', line)
+            
+        # Fix remaining _symbol patterns (remove extra underscores)
+        if '_' in line:
+            line = re.sub(r'\[_([a-zA-Z_][a-zA-Z0-9_]*)\s*\+\s*([0-9]+)\]', r'[\1 + \2]', line)
+            line = re.sub(r'\[_([a-zA-Z_][a-zA-Z0-9_]*)\]', r'[\1]', line)
+            
+        # Final cleanup: remove any remaining underscores in bracket expressions
+        if '[' in line and '_' in line:
+            line = re.sub(r'\[_([a-zA-Z_][a-zA-Z0-9_]*)\]', r'[\1]', line)
+            
+        # Direct replacement for common patterns
+        if '_wPlayerMoney' in line:
+            line = line.replace('[_wPlayerMoney', '[wPlayerMoney')
+            line = line.replace('_wPlayerMoney', 'wPlayerMoney')
+            
+        # Fix missing spaces around + operator
+        if '+' in line:
+            line = re.sub(r'([a-zA-Z_][a-zA-Z0-9_]*)\+([0-9]+)', r'\1 + \2', line)
+            
+        # Convert #(symbol) to [symbol] (change parentheses to brackets)
+        if '#' in line and '(' in line and ')' in line:
+            line = re.sub(r'#\(([^)]+)\)', r'[\1]', line)
+            
+        # Fix RGBDS addressing: ld hl, [wPlayerMoney + 1] should be ld hl, wPlayerMoney + 1
+        if 'ld' in line and 'hl,' in line and '[' in line and ']' in line:
+            line = re.sub(r'ld\s+hl,\s*\[([^\]]+)\]', r'ld\t\thl, \1', line)
+            
+        # Convert #0x to $ (hex values)
+        if '#' in line and '0x' in line:
+            line = re.sub(r'#0x([0-9a-fA-F]+)', r'$\1', line)
+            
+        # Convert (hl) to [hl] (indirect addressing)
+        if '(hl)' in line:
+            line = line.replace('(hl)', '[hl]')
+        if '(bc)' in line:
+            line = line.replace('(bc)', '[bc]')
+        if '(de)' in line:
+            line = line.replace('(de)', '[de]')
+            
         # Skip other SDCC-specific lines
         if any(line.startswith(prefix) for prefix in [
             '; special function registers',
@@ -94,95 +140,20 @@ def convert_sdcc_to_rgbds(sdcc_file, output_file):
         ]):
             continue
             
+        # Handle C source comments (convert them to regular assembly comments)
+        if line.startswith(';c_code/'):
+            # Convert C source comments to regular assembly comments
+            comment = line.replace(';c_code/', '; C: ')
+            rgbds_lines.append(comment)
+            continue
+            
         # Keep other lines as-is (labels, etc.)
         if line and not line.startswith(';'):
             rgbds_lines.append(line)
     
-    # Add the NewGameText label that the main menu expects
-    rgbds_lines.append("")
-    rgbds_lines.append("; Add the label that the main menu expects")
-    rgbds_lines.append("; NewGameText should point to the actual C data")
-    rgbds_lines.append("NewGameText::")
+
     
-    # Parse the actual C-compiled data from SDCC output
-    line1_data = []
-    line2_data = []
-    in_line1_section = False
-    in_line2_section = False
-    
-    for line in lines:
-        line = line.strip()
-        if line.startswith('_new_game_line1:'):
-            in_line1_section = True
-            in_line2_section = False
-            continue
-        elif line.startswith('_new_game_line2:'):
-            in_line1_section = False
-            in_line2_section = True
-            continue
-        elif in_line1_section and line.startswith('_'):
-            # We've hit the next label, stop copying line1
-            in_line1_section = False
-        elif in_line2_section and line.startswith('_'):
-            # We've hit the next label, stop copying line2
-            in_line1_section = False
-        elif in_line1_section and line:
-            # Copy the line1 data lines
-            if line.startswith('.db #0x'):
-                match = re.match(r'\.db #0x([0-9a-fA-F]+)', line)
-                if match:
-                    hex_val = match.group(1)
-                    line1_data.append(f'\tdb ${hex_val}')
-        elif in_line2_section and line:
-            # Copy the line2 data lines
-            if line.startswith('.db #0x'):
-                match = re.match(r'\.db #0x([0-9a-fA-F]+)', line)
-                if match:
-                    hex_val = match.group(1)
-                    line2_data.append(f'\tdb ${hex_val}')
-    
-    # Output the first line data using actual C-compiled values
-    if line1_data:
-        rgbds_lines.append('\t; First line from C compilation:')
-        # Convert hex values back to string for the first line
-        first_line_chars = []
-        for data_line in line1_data:
-            # Extract hex value from "db $XX"
-            match = re.match(r'\tdb \$([0-9a-fA-F]+)', data_line)
-            if match:
-                hex_val = int(match.group(1), 16)
-                first_line_chars.append(chr(hex_val))
-        
-        if first_line_chars:
-            first_line_str = ''.join(first_line_chars)
-            rgbds_lines.append(f'\tdb "{first_line_str}"')
-        else:
-            rgbds_lines.append('\tdb "NEW GAME"')
-    else:
-        # Fallback if no data found
-        rgbds_lines.append('\t; Fallback data (C compilation may have failed):')
-        rgbds_lines.append('\tdb "NEW GAME"')
-    
-    # Output the second line using the 'next' macro
-    if line2_data:
-        rgbds_lines.append('\t; Second line from C compilation:')
-        # Convert hex values back to string for the next macro
-        second_line_chars = []
-        for data_line in line2_data:
-            # Extract hex value from "db $XX"
-            match = re.match(r'\tdb \$([0-9a-fA-F]+)', data_line)
-            if match:
-                hex_val = int(match.group(1), 16)
-                second_line_chars.append(chr(hex_val))
-        
-        if second_line_chars:
-            second_line_str = ''.join(second_line_chars)
-            rgbds_lines.append(f'\tnext "{second_line_str}@"')
-        else:
-            rgbds_lines.append('\tnext "OPTION@"')
-    else:
-        rgbds_lines.append('\t; Second line (using next macro):')
-        rgbds_lines.append('\tnext "OPTION@"')
+
     
     # Write the converted file
     with open(output_file, 'w') as f:

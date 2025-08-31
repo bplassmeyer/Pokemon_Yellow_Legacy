@@ -21,7 +21,8 @@ rom_obj = \
 	gfx/sprites.o \
 	gfx/tilesets.o \
 	c_code/menu_strings_rgbds.o \
-	c_code/game_options_rgbds.o
+	c_code/game_options_rgbds.o \
+	c_code/money_management_rgbds.o
 
 pokeyellow_obj       := $(rom_obj)
 pokeyellow_debug_obj := $(rom_obj:.o=_debug.o)
@@ -227,3 +228,10 @@ data/pokemon/base_stats/eevee.asm: c_code/pokemon_stats.s
 # Compile Game Options C code and convert to RGBDS assembly
 c_code/game_options.s: c_code/game_options.c
 	$(LCC) $(LCCFLAGS) $@ $<
+
+# Compile Money Management C code and convert to RGBDS assembly
+c_code/money_management.s: c_code/money_management.c
+	$(LCC) $(LCCFLAGS) $@ $<
+
+c_code/money_management_rgbds.asm: c_code/money_management.s
+	python3 c_code/convert_sdcc_to_rgbds.py $< $@
