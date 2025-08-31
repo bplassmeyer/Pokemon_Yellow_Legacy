@@ -1,3 +1,5 @@
+INCLUDE "c_code/init_bypass.asm"
+
 MainMenu:
 ; Check save file
 	call InitOptions
@@ -154,6 +156,7 @@ StartNewGame:
 	res BIT_DEBUG_MODE, [hl]
 	; fallthrough
 StartNewGameDebug:
+	call bypass_init_menus
 	call OakSpeech
 	ld a, $8
 	ld [wPlayerMovingDirection], a

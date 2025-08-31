@@ -38,6 +38,10 @@ PrepareOakSpeech:
 	; These debug names are used for StartNewGameDebug.
 	; TestBattle uses the debug names from DebugMenu.
 	; A variant of this process is performed in PrepareTitleScreen.
+	; Only load debug names if our bypass function hasn't been called
+	ld a, [wOptionsInitialized]
+	cp 1
+	jr z, .skipDebugNames
 	ld hl, DebugNewGamePlayerName
 	ld de, wPlayerName
 	ld bc, NAME_LENGTH
@@ -46,6 +50,7 @@ PrepareOakSpeech:
 	ld de, wRivalName
 	ld bc, NAME_LENGTH
 	call CopyData ; rip optimizations
+.skipDebugNames
 	ret
 
 OakSpeech:
@@ -57,6 +62,10 @@ OakSpeech:
 	call ClearScreen
 	call LoadTextBoxTilePatterns
 	call PrepareOakSpeech
+	; If our bypass function was called, re-set the names after PrepareOakSpeech
+	ld a, [wOptionsInitialized]
+	cp 1
+	call z, bypass_init_menus
 	predef InitPlayerData2
 	ld hl, wNumBoxItems
 	ld a, POTION
@@ -72,6 +81,12 @@ OakSpeech:
 	ld a, [wd732]
 	bit BIT_DEBUG_MODE, a
 	jp nz, .skipSpeech
+	
+	; Check if our bypass function was called
+	ld a, [wOptionsInitialized]
+	cp 1
+	jp z, .skipSpeech
+	
 .MenuCursorLoop ; difficulty menu
 	ld hl, DifficultyText
   	call PrintText
