@@ -156,12 +156,9 @@ StartNewGame:
 	res BIT_DEBUG_MODE, [hl]
 	; fallthrough
 StartNewGameDebug:
-	call bypass_init_menus
-	call OakSpeech
-	ld a, $8
-	ld [wPlayerMovingDirection], a
-	ld c, 20
-	call DelayFrames
+	call bypass_graphics_cleanup
+	; No need to call OakSpeech or set up player data - bypass_graphics_cleanup handles everything
+	; and jumps directly to SpecialEnterMap
 
 ; enter map after using a special warp or loading the game from the main menu
 SpecialEnterMap::
