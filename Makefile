@@ -22,7 +22,7 @@ rom_obj = \
 	gfx/tilesets.o \
 	c_code/menu_strings_rgbds.o \
 	c_code/game_options_rgbds.o \
-	c_code/money_management_rgbds.o
+	c_code/game_operations_rgbds.o
 
 pokeyellow_obj       := $(rom_obj)
 pokeyellow_debug_obj := $(rom_obj:.o=_debug.o)
@@ -235,3 +235,12 @@ c_code/money_management.s: c_code/money_management.c
 
 c_code/money_management_rgbds.asm: c_code/money_management.s
 	python3 c_code/convert_sdcc_to_rgbds.py $< $@
+
+# Compile Game Operations Library C code and convert to RGBDS assembly
+c_code/game_operations.s: c_code/game_operations.c
+	$(LCC) $(LCCFLAGS) $@ $<
+
+c_code/game_operations_rgbds.asm: c_code/game_operations.s
+	python3 c_code/convert_sdcc_to_rgbds.py $< $@
+
+

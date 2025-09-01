@@ -203,8 +203,8 @@ bypass_to_pikachu_following::
     ld hl, wd72e
     set 3, [hl]
     
-    ; Test our money management system by setting starting money to $10,000 (final correct version)
-    call _give_ten_thousand_final
+    ; Test our new game operations library by setting starting money to $10,000
+    call _give_ten_thousand
     
     ; Set wOakWalkedToPlayer to 2 to indicate the intro sequence is complete
     ; This prevents Oak from showing the "Hey! Wait! Don't go out!" warning
@@ -293,6 +293,11 @@ bypass_to_pikachu_following::
     
     ; Call PrepareForSpecialWarp to set up the warp data properly
     call PrepareForSpecialWarp
+    
+    ; DISABLED: C inventory functions still cause memory corruption
+    ; call _give_pokeballs
+    ; ld hl, wNumBagItems
+    ; call AddItemToInventory
     
     ; Jump directly to SpecialEnterMap, which will put us in Oak's Lab
     jp SpecialEnterMap

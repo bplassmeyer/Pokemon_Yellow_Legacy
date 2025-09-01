@@ -117,6 +117,22 @@ def convert_sdcc_to_rgbds(sdcc_file, output_file):
         if 'ld' in line and 'hl,' in line and '[' in line and ']' in line:
             line = re.sub(r'ld\s+hl,\s*\[([^\]]+)\]', r'ld\t\thl, \1', line)
             
+        # Fix malformed ld instructions with extra tabs
+        if line.startswith('ld\t\t'):
+            line = line.replace('ld\t\t', 'ld\t')
+            
+        # Fix malformed ld instructions with missing operands
+        if 'ld\t\t' in line:
+            line = line.replace('ld\t\t', 'ld\t')
+            
+        # Fix specific malformed ld instructions
+        if line.startswith('ld\t\t'):
+            line = line.replace('ld\t\t', 'ld\t')
+            
+        # Fix lines with multiple tabs
+        if '\t\t' in line:
+            line = line.replace('\t\t', '\t')
+            
         # Convert #0x to $ (hex values)
         if '#' in line and '0x' in line:
             line = re.sub(r'#0x([0-9a-fA-F]+)', r'$\1', line)
